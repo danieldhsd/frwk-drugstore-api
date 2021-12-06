@@ -73,7 +73,7 @@ public class CategoryController {
 		Category storedCategory = categoryOpt.get();
 		BeanUtils.copyProperties(category, storedCategory, "id", "createdAt", "updatedAt");
 		
-		storedCategory = categoryRepository.save(storedCategory);
+		storedCategory = categoryService.create(storedCategory);
 		
 		return ResponseEntity.ok(storedCategory);
 	}
