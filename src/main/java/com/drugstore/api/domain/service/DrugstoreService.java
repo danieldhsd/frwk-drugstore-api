@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.drugstore.api.domain.exception.DrugstoreAlreadyExistsException;
+import com.drugstore.api.domain.exception.EntityAlreadyExistsException;
 import com.drugstore.api.domain.model.Drugstore;
 import com.drugstore.api.domain.repository.DrugstoreRepository;
 
@@ -16,20 +16,21 @@ public class DrugstoreService {
 	private DrugstoreRepository drugstoreRepository;
 	
 	public Drugstore create(Drugstore drugstore) {
-		List<Drugstore> drugstores = null;
-		
-		if(drugstore.getId() != null) {
-			drugstores = drugstoreRepository.findByCnpjAndIdDiff(drugstore.getCnpj(), drugstore.getId());
-			
-		} else {
-			drugstores = drugstoreRepository.findByCnpj(drugstore.getCnpj());
-		}
+		List<Drugstore> drugstores = searchExistingDrugstores(drugstore);
 		
 		if(drugstores != null && !drugstores.isEmpty()) {
-			throw new DrugstoreAlreadyExistsException("Drugstore already exists");
+			throw new EntityAlreadyExistsException("Drugstore already exists");
 		}
 		
 		return drugstoreRepository.save(drugstore);
+	}
+	
+	private List<Drugstore> searchExistingDrugstores(Drugstore drugstore) {
+		if(drugstore.getId() != null) {
+			return drugstoreRepository.findByCnpjAndIdDiff(drugstore.getCnpj(), drugstore.getId());
+		}
+		
+		return drugstoreRepository.findByCnpj(drugstore.getCnpj());
 	}
 	
 }

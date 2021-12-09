@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drugstore.api.domain.exception.DrugstoreAlreadyExistsException;
+import com.drugstore.api.domain.exception.EntityAlreadyExistsException;
 import com.drugstore.api.domain.model.Drugstore;
 import com.drugstore.api.domain.repository.DrugstoreRepository;
 import com.drugstore.api.domain.service.DrugstoreService;
@@ -60,7 +60,7 @@ public class DrugstoreController {
 			drugstore = drugstoreService.create(drugstore);
 			return ResponseEntity.status(HttpStatus.CREATED).body(drugstore);
 		
-		} catch (DrugstoreAlreadyExistsException e) {
+		} catch (EntityAlreadyExistsException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
