@@ -9,11 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PreUpdate;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
+@Table(name = "tb_category")
 public class Category {
 
 	@Id
@@ -22,6 +24,8 @@ public class Category {
 	
 	@NotBlank
 	private String name;
+	
+	private String description;
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "timestamp")
@@ -34,6 +38,23 @@ public class Category {
 	@PreUpdate
 	public void preUpdate() {
 		updatedAt = OffsetDateTime.now();
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Category other = (Category) obj;
+		return Objects.equals(id, other.id);
 	}
 	
 	public Long getId() {
@@ -68,21 +89,12 @@ public class Category {
 		this.updatedAt = updatedAt;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
+	public String getDescription() {
+		return description;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Category other = (Category) obj;
-		return Objects.equals(id, other.id);
+	public void setDescription(String description) {
+		this.description = description;
 	}
-	
+
 }

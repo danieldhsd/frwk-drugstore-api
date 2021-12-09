@@ -1,8 +1,10 @@
 package com.drugstore.api.domain.model;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Table;
 
 @Embeddable
+@Table(name = "tb_address")
 public class Address {
 
 	private String postalCode;
@@ -17,8 +19,6 @@ public class Address {
 	
 	private String state;
 	
-	private String country;
-
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -57,14 +57,6 @@ public class Address {
 
 	public void setState(String state) {
 		this.state = state;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
 	}
 
 	public String getNumber() {
