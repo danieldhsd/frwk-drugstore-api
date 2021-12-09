@@ -3,6 +3,7 @@ package com.drugstore.api.domain.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.drugstore.api.domain.model.Category;
@@ -11,4 +12,7 @@ import com.drugstore.api.domain.model.Category;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
 	public List<Category> findByName(String name);
+	
+	@Query("FROM Category c WHERE c.name = :name AND c.id != :id")
+	public List<Category> findByNameAndIdDiff(String name, Long id);
 }
