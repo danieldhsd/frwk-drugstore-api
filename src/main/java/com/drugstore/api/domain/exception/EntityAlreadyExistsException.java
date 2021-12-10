@@ -1,6 +1,6 @@
 package com.drugstore.api.domain.exception;
 
-public class EntityAlreadyExistsException extends RuntimeException {
+public class EntityAlreadyExistsException extends GenericException {
 
 	private static final long serialVersionUID = 1L;
 

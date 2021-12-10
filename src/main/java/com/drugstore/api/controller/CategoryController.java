@@ -1,16 +1,12 @@
 package com.drugstore.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,9 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drugstore.api.domain.exception.EntityAlreadyExistsException;
+import com.drugstore.api.controller.assembler.CategoryInputDisassembler;
+import com.drugstore.api.controller.assembler.CategoryModelAssembler;
+import com.drugstore.api.controller.model.CategoryModel;
+import com.drugstore.api.controller.model.input.CategoryInput;
 import com.drugstore.api.domain.model.Category;
 import com.drugstore.api.domain.repository.CategoryRepository;
 import com.drugstore.api.domain.service.CategoryService;
@@ -35,58 +35,47 @@ public class CategoryController {
 	@Autowired
 	private CategoryService categoryService;
 	
+	@Autowired
+	private CategoryModelAssembler categoryModelAssembler;
+	
+	@Autowired
+	private CategoryInputDisassembler categoryInputDisassembler;
+	
 	@GetMapping
-	public List<Category> getAll() {
-		return categoryRepository.findAll();
+	public List<CategoryModel> getAll() {
+		return categoryModelAssembler.toCollectionModel(categoryRepository.findAll());
 	}
 	
 	@GetMapping("/{idCategory}")
-	public ResponseEntity<?> findById(@PathVariable Long idCategory) {
-		Optional<Category> categoryOpt = categoryRepository.findById(idCategory);
+	public CategoryModel findById(@PathVariable Long idCategory) {
+		Category category = categoryService.getOrThrowException(idCategory);
 		
-		if(categoryOpt.isPresent()) {
-			return ResponseEntity.ok(categoryOpt.get());
-		}
-		
-		return ResponseEntity.notFound().build();
+		return categoryModelAssembler.toModel(category);
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> create(@RequestBody @Valid Category category) {
-		try {
-			category = categoryService.create(category);
-			return ResponseEntity.status(HttpStatus.CREATED).body(category);
-		
-		} catch (EntityAlreadyExistsException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+	@ResponseStatus(HttpStatus.CREATED)
+	public CategoryModel create(@RequestBody @Valid CategoryInput categoryInput) {
+		Category category = categoryInputDisassembler.toDomainObject(categoryInput);
+		category = categoryService.create(category);
+
+		return categoryModelAssembler.toModel(category);
 	}
 	
 	@PutMapping("/{idCategory}")
-	public ResponseEntity<?> update(@PathVariable Long idCategory, @RequestBody @Valid Category category) {
-		Optional<Category> categoryOpt = categoryRepository.findById(idCategory);
+	public CategoryModel update(@PathVariable Long idCategory, @RequestBody @Valid CategoryInput categoryInput) throws Exception {
+		Category category = categoryInputDisassembler.toDomainObject(categoryInput);
+
+		Category storedCategory = categoryService.getOrThrowException(idCategory);
 		
-		if(!categoryOpt.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		Category storedCategory = categoryOpt.get();
 		BeanUtils.copyProperties(category, storedCategory, "id", "createdAt", "updatedAt");
 		
-		return create(storedCategory);
+		return categoryModelAssembler.toModel(categoryService.create(storedCategory));
 	}
 	
 	@DeleteMapping("/{idCategory}")
-	public ResponseEntity<?> delete(@PathVariable Long idCategory) {
-		try {
-			categoryRepository.deleteById(idCategory);
-			return ResponseEntity.noContent().build();
-
-		} catch (EmptyResultDataAccessException e) {
-			return ResponseEntity.notFound().build();
-			
-		} catch (DataIntegrityViolationException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Category can't be removed.");
-		}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable Long idCategory) {
+		categoryService.remove(idCategory);
 	}
 }
