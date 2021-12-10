@@ -3,15 +3,11 @@ package com.drugstore.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +16,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.drugstore.api.domain.exception.EntityAlreadyExistsException;
+import com.drugstore.api.controller.assembler.DrugstoreInputDisassembler;
+import com.drugstore.api.controller.assembler.DrugstoreModelAssembler;
+import com.drugstore.api.controller.model.DrugstoreModel;
+import com.drugstore.api.controller.model.input.DrugstoreInput;
 import com.drugstore.api.domain.model.Drugstore;
 import com.drugstore.api.domain.repository.DrugstoreRepository;
 import com.drugstore.api.domain.service.DrugstoreService;
@@ -37,60 +37,47 @@ public class DrugstoreController {
 	
 	@Autowired
 	private DrugstoreService drugstoreService;
+
+	@Autowired
+	private DrugstoreModelAssembler drugstoreModelAssembler;
+	
+	@Autowired
+	private DrugstoreInputDisassembler drugstoreInputDisassembler;
 	
 	@GetMapping
-	public List<Drugstore> getAll() {
-		return drugstoreRepository.findAll();
+	public List<DrugstoreModel> getAll() {
+		return drugstoreModelAssembler.toCollectionModel(drugstoreRepository.findAll());
 	}
 	
 	@GetMapping("/{idDrugstore}")
-	public ResponseEntity<?> findById(@PathVariable Long idDrugstore) {
-		Optional<Drugstore> drugstoreOpt = drugstoreRepository.findById(idDrugstore);
+	public DrugstoreModel findById(@PathVariable Long idDrugstore) {
+		Drugstore drugstore = drugstoreService.getOrThrowException(idDrugstore);
 		
-		if(drugstoreOpt.isPresent()) {
-			return ResponseEntity.ok(drugstoreOpt.get());
-		}
-		
-		return ResponseEntity.notFound().build();
+		return drugstoreModelAssembler.toModel(drugstore);
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> create(@RequestBody @Valid Drugstore drugstore) {
-		try {
-			drugstore = drugstoreService.create(drugstore);
-			return ResponseEntity.status(HttpStatus.CREATED).body(drugstore);
+	@ResponseStatus(HttpStatus.CREATED)
+	public DrugstoreModel create(@RequestBody @Valid DrugstoreInput drugstoreInput) {
+		Drugstore drugstore = drugstoreInputDisassembler.toDomainObject(drugstoreInput);
+		drugstore = drugstoreService.create(drugstore);
 		
-		} catch (EntityAlreadyExistsException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+		return drugstoreModelAssembler.toModel(drugstore);
 	}
 	
 	@PutMapping("/{idDrugstore}")
-	public ResponseEntity<?> update(@PathVariable Long idDrugstore, @RequestBody Map<String, Object> fields) {
-		Optional<Drugstore> drugstoreOpt = drugstoreRepository.findById(idDrugstore);
+	public DrugstoreModel update(@PathVariable Long idDrugstore, @RequestBody Map<String, Object> fields) {
+		Drugstore drugstore = drugstoreService.getOrThrowException(idDrugstore);
 		
-		if(!drugstoreOpt.isPresent()) {
-			return ResponseEntity.notFound().build();
-		}
-		Drugstore storedDrugstore = drugstoreOpt.get();
+		merge(fields, drugstore);
 		
-		merge(fields, storedDrugstore);
-		
-		return create(storedDrugstore);
+		return drugstoreModelAssembler.toModel(drugstoreService.create(drugstore));
 	}
 	
 	@DeleteMapping("/{idDrugstore}")
-	public ResponseEntity<?> delete(@PathVariable Long idDrugstore) {
-		try {
-			drugstoreRepository.deleteById(idDrugstore);
-			return ResponseEntity.noContent().build();
-
-		} catch (EmptyResultDataAccessException e) {
-			return ResponseEntity.notFound().build();
-			
-		} catch (DataIntegrityViolationException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body("Drugstore can't be removed.");
-		}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable Long idDrugstore) {
+		drugstoreService.remove(idDrugstore);
 	}
 	
 	private void merge(Map<String, Object> fields, Drugstore storedDrugstore) {

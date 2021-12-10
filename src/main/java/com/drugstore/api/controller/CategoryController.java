@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,13 +63,10 @@ public class CategoryController {
 	
 	@PutMapping("/{idCategory}")
 	public CategoryModel update(@PathVariable Long idCategory, @RequestBody @Valid CategoryInput categoryInput) throws Exception {
-		Category category = categoryInputDisassembler.toDomainObject(categoryInput);
-
-		Category storedCategory = categoryService.getOrThrowException(idCategory);
+		Category category = categoryService.getOrThrowException(idCategory);
+		categoryInputDisassembler.copyToDomainObject(categoryInput, category);
 		
-		BeanUtils.copyProperties(category, storedCategory, "id", "createdAt", "updatedAt");
-		
-		return categoryModelAssembler.toModel(categoryService.create(storedCategory));
+		return categoryModelAssembler.toModel(categoryService.create(category));
 	}
 	
 	@DeleteMapping("/{idCategory}")

@@ -17,4 +17,8 @@ public class CategoryInputDisassembler {
 		return modelMapper.map(categoryInput, Category.class);
 	}
 	
+	public void copyToDomainObject(CategoryInput categoryInput, Category category) {
+		modelMapper.map(categoryInput, category);
+	}
+	
 }
