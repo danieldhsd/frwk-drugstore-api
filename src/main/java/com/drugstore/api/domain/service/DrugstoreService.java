@@ -1,7 +1,5 @@
 package com.drugstore.api.domain.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,9 +18,7 @@ public class DrugstoreService {
 	private DrugstoreRepository drugstoreRepository;
 	
 	public Drugstore create(Drugstore drugstore) {
-		List<Drugstore> drugstores = searchExistingDrugstores(drugstore);
-		
-		if(drugstores != null && !drugstores.isEmpty()) {
+		if(isDrugstoreAlreadyExists(drugstore)) {
 			throw new EntityAlreadyExistsException("Drugstore already exists");
 		}
 		
@@ -45,12 +41,12 @@ public class DrugstoreService {
 		return drugstoreRepository.findById(idDrugstore).orElseThrow(() -> new EntityNotFoundException("Drugstore not found!"));
 	}
 	
-	private List<Drugstore> searchExistingDrugstores(Drugstore drugstore) {
+	private boolean isDrugstoreAlreadyExists(Drugstore drugstore) {
 		if(drugstore.getId() != null) {
-			return drugstoreRepository.findByCnpjAndIdDiff(drugstore.getCnpj(), drugstore.getId());
+			return drugstoreRepository.countByCnpjAndIdDiff(drugstore.getCnpj(), drugstore.getId()) > 0;
 		}
 		
-		return drugstoreRepository.findByCnpj(drugstore.getCnpj());
+		return drugstoreRepository.existsByCnpj(drugstore.getCnpj());
 	}
 	
 }
