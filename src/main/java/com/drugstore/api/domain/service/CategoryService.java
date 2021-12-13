@@ -1,7 +1,5 @@
 package com.drugstore.api.domain.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -20,9 +18,7 @@ public class CategoryService {
 	private CategoryRepository categoryRepository;
 	
 	public Category create(Category category) {
-		List<Category> categories = searchExistingCategories(category);
-		
-		if(categories != null && !categories.isEmpty()) {
+		if(isCategoryAlreadyExists(category)) {
 			throw new EntityAlreadyExistsException("Category already exists");
 		}
 		
@@ -45,12 +41,12 @@ public class CategoryService {
 		return categoryRepository.findById(idCategory).orElseThrow(() -> new EntityNotFoundException("Category not found!"));
 	}
 	
-	private List<Category> searchExistingCategories(Category category) {
+	private boolean isCategoryAlreadyExists(Category category) {
 		if(category.getId() != null) {
-			return categoryRepository.findByNameAndIdDiff(category.getName(), category.getId());
+			return categoryRepository.countByNameAndIdDiff(category.getName(), category.getId()) > 0;
 		}
 		
-		return categoryRepository.findByName(category.getName());
+		return categoryRepository.existsByName(category.getName());
 	}
 	
 }
