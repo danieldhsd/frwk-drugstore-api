@@ -58,7 +58,7 @@ public class ProductController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ProductModel create(@RequestBody ProductInput productInput/*, @RequestParam MultipartFile productPhoto*/) {
+	public ProductModel create(@RequestBody @Valid ProductInput productInput/*, @RequestParam MultipartFile productPhoto*/) {
 //		TODO: Implementar a parte de salvar a foto no disco
 		Product product = productInputDisassembler.toDomainObject(productInput);
 		product = productService.create(product);

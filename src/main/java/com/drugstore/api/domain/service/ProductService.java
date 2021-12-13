@@ -1,7 +1,5 @@
 package com.drugstore.api.domain.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,9 +22,7 @@ public class ProductService {
 	private CategoryService categoryService;
 	
 	public Product create(Product product) {
-		List<Product> products = searchExistingProducts(product);
-		
-		if(products != null && !products.isEmpty()) {
+		if(isProductAlreadyExists(product)) {
 			throw new EntityAlreadyExistsException("Product already exists");
 		}
 		
@@ -52,11 +48,11 @@ public class ProductService {
 		return productRepository.findById(idProduct).orElseThrow(() -> new EntityNotFoundException("Product not found!"));
 	}
 	
-	private List<Product> searchExistingProducts(Product product) {
+	private boolean isProductAlreadyExists(Product product) {
 		if(product.getId() != null) {
-			return productRepository.findBySkuAndIdDiff(product.getSku(), product.getId());
+			return productRepository.countBySkuAndIdDiff(product.getSku(), product.getId()) > 0;
 		}
 		
-		return productRepository.findBySku(product.getSku());
+		return productRepository.existsBySku(product.getSku());
 	}
 }
