@@ -9,15 +9,10 @@ import com.frwk.drugstore.domain.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	boolean existsByEmail(String email);
-	
-	@Query("SELECT count(*) FROM User u WHERE u.email = :email AND u.id != :idUser")
-	int countByEmailAndIdDiff(String email, Long idUser);
-	
-	boolean existsByCpf(String cpf);
-	
-	@Query("SELECT count(*) FROM User u WHERE u.cpf = :cpf AND u.id != :idUser")
-	int countByCpfAndIdDiff(String cpf, Long idUser);
-	
 	User findFirstByCpf(String cpf);
+	
+	boolean existsByEmailOrCpf(String email, String cpf);
+	
+	@Query("SELECT count(*) FROM User u WHERE (u.email = :email OR u.cpf = :cpf) AND u.id != :idUser")
+	int countByEmailOrCpfAndIdDiff(String email, String cpf, Long idUser);
 }
