@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,8 +118,8 @@ public class OrderService {
 	private void setOrderClient(Order order) {
 		if(order.getCpfClient() != null 
 				&& (order.getClient() == null || order.getClient().getId() == null)) {
-			User user = userRepository.findFirstByCpf(order.getCpfClient());
-			order.setClient(user);
+			Optional<User> user = userRepository.findFirstByCpf(order.getCpfClient());
+			order.setClient(user.get());
 		}
 	}
 	

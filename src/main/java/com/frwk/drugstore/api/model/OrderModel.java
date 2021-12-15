@@ -6,6 +6,11 @@ import java.util.List;
 
 import com.frwk.drugstore.domain.model.enumeration.PaymentMethod;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class OrderModel {
 
 	private Long id;
@@ -26,75 +31,5 @@ public class OrderModel {
 	
 	private OffsetDateTime updatedAt;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public DrugstoreModel getDrugstore() {
-		return drugstore;
-	}
-
-	public void setDrugstore(DrugstoreModel drugstore) {
-		this.drugstore = drugstore;
-	}
-
-	public List<OrderItemModel> getOrderItems() {
-		return orderItems;
-	}
-
-	public void setOrderItems(List<OrderItemModel> orderItems) {
-		this.orderItems = orderItems;
-	}
-
-	public UserModel getClient() {
-		return client;
-	}
-
-	public void setClient(UserModel client) {
-		this.client = client;
-	}
-
-	public String getCpfClient() {
-		return cpfClient;
-	}
-
-	public void setCpfClient(String cpfClient) {
-		this.cpfClient = cpfClient;
-	}
-
-	public BigDecimal getTotalValue() {
-		return totalValue;
-	}
-
-	public void setTotalValue(BigDecimal totalValue) {
-		this.totalValue = totalValue;
-	}
-
-	public PaymentMethod getPaymentMethod() {
-		return paymentMethod;
-	}
-
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
-
-	public OffsetDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(OffsetDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public OffsetDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(OffsetDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+	
 }
