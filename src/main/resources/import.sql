@@ -2,6 +2,9 @@ INSERT INTO tb_category (id, name, description, created_at, updated_at) VALUES (
 INSERT INTO tb_category (id, name, description, created_at, updated_at) VALUES (2, 'Bebidas', 'Bebidas para beber', current_timestamp, current_timestamp);
 INSERT INTO tb_category (id, name, description, created_at, updated_at) VALUES (3, 'Remedios', 'Remedios', current_timestamp, current_timestamp);
 
+insert into tb_financial_instituition (code, created_at, description, name, updated_at) values ('135', current_timestamp, 'Banco Bradesco Desc', 'Banco Bradesco', current_timestamp);
+insert into tb_financial_instituition (code, created_at, description, name, updated_at) values ('098', current_timestamp, 'Nubank Digital', 'Nubank', current_timestamp);
+
 INSERT INTO tb_drugstore (id, city, neighborhood, number, postal_code, state, street, cnpj, created_at, email, name, updated_at) VALUES (1, 'Santos', 'Centro', '40', '30350280', 'SP', 'Rua 15', '98298733000159', current_timestamp, 'araujo@email.com', 'Drogaria Araujo', current_timestamp);
 INSERT INTO drugstore_phones (drugstore_id, phones) VALUES (1, '(31) 99954-2554');
 INSERT INTO drugstore_phones (drugstore_id, phones) VALUES (1, '(31) 3333-3333');

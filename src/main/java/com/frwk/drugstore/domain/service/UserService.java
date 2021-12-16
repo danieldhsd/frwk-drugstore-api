@@ -22,12 +22,8 @@ public class UserService {
 	private PasswordEncoder passwordEncoder;
 	
 	public User create(User user) {
-		if(isEmailAlreadyInUse(user.getEmail(), user.getId())) {
-			throw new GenericException("This email is already in use");
-		}
-		
-		if(isCpfAlreadyInUse(user.getCpf(), user.getId())) {
-			throw new GenericException("This CPF is already in use");
+		if(isEmailOrCpfAlreadyInUse(user.getEmail(), user.getCpf(), user.getId())) {
+			throw new GenericException("This Email and/or CPF is already in use");
 		}
 		
 		if(user.isNew()) {
@@ -64,19 +60,12 @@ public class UserService {
 		return userRepository.findById(idUser).orElseThrow(() -> new EntityNotFoundException("User not found!"));
 	}
 	
-	private boolean isEmailAlreadyInUse(String userEmail, Long userId) {
+	private boolean isEmailOrCpfAlreadyInUse(String userEmail, String userCpf, Long userId) {
 		if(userId != null) {
-			return userRepository.countByEmailAndIdDiff(userEmail, userId) > 0;
+			return userRepository.countByEmailOrCpfAndIdDiff(userEmail, userCpf, userId) > 0;
 		}
 		
-		return userRepository.existsByEmail(userEmail);
+		return userRepository.existsByEmailOrCpf(userEmail, userCpf);
 	}
 	
-	private boolean isCpfAlreadyInUse(String userCpf, Long userId) {
-		if(userId != null) {
-			return userRepository.countByCpfAndIdDiff(userCpf, userId) > 0;
-		}
-		
-		return userRepository.existsByCpf(userCpf);
-	}
 }
