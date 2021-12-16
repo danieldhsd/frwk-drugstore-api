@@ -1,37 +1,30 @@
 package com.frwk.drugstore.domain.model;
 
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.validator.constraints.br.CPF;
-
-import com.frwk.drugstore.domain.model.enumeration.UserType;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tb_user")
+@Table(name = "tb_account_financial_instituition")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
-public class User {
+public class AccountFinancialInstituition {
 
 	@EqualsAndHashCode.Include
 	@Id
@@ -39,27 +32,18 @@ public class User {
 	private Long id;
 	
 	@NotBlank
-	private String name;
-	
-	@CPF
-	@NotBlank
-	private String cpf;
-	
-	private LocalDate birthday;
-	
-	@Email
-	@NotBlank
-	private String email;
+	private String account;
 	
 	@NotBlank
-	private String password;
+	private String agency;
 	
+	@ManyToOne
 	@NotNull
-	@Enumerated(EnumType.STRING)
-	private UserType userType;
+	private User client;
 	
-	@Embedded
-	private Address address;
+	@ManyToOne
+	@NotNull
+	private FinancialInstituition financialInstituition;
 	
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "timestamp")
@@ -73,9 +57,4 @@ public class User {
 	public void preUpdate() {
 		updatedAt = OffsetDateTime.now();
 	}
-	
-	public boolean isNew() {
-		return id == null;
-	}
-
 }
