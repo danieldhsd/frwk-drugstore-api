@@ -2,7 +2,6 @@ package com.frwk.drugstore.domain.model;
 
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -21,10 +20,18 @@ import javax.validation.constraints.NotBlank;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.br.CNPJ;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "tb_drugstore")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 public class Drugstore {
 
+	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -59,84 +66,4 @@ public class Drugstore {
 		updatedAt = OffsetDateTime.now();
 	}
 	
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Drugstore other = (Drugstore) obj;
-		return Objects.equals(id, other.id);
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	public OffsetDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(OffsetDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public OffsetDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(OffsetDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public String getCnpj() {
-		return cnpj;
-	}
-
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public List<String> getPhones() {
-		return phones;
-	}
-
-	public void setPhones(List<String> phones) {
-		this.phones = phones;
-	}
 }

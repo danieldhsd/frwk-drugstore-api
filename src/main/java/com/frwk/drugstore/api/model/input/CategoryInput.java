@@ -2,6 +2,11 @@ package com.frwk.drugstore.api.model.input;
 
 import javax.validation.constraints.NotBlank;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class CategoryInput {
 
 	@NotBlank
@@ -9,19 +14,4 @@ public class CategoryInput {
 	
 	private String description;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
 }

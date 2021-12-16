@@ -7,6 +7,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.frwk.drugstore.domain.model.Address;
 import com.frwk.drugstore.domain.model.enumeration.UserType;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class UserModel {
 
 	private Long id;
@@ -28,75 +33,4 @@ public class UserModel {
 	
 	private OffsetDateTime updatedAt;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public LocalDate getBirthday() {
-		return birthday;
-	}
-
-	public void setBirthday(LocalDate birthday) {
-		this.birthday = birthday;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public UserType getUserType() {
-		return userType;
-	}
-
-	public void setUserType(UserType userType) {
-		this.userType = userType;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-
-	public OffsetDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(OffsetDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public OffsetDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(OffsetDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
 }

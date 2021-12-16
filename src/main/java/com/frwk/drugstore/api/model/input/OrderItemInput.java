@@ -4,10 +4,16 @@ import java.math.BigDecimal;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class OrderItemInput {
 
 	private BigDecimal unitPrice;
 	
+	@NotNull
 	private Integer quantity;
 	
 	private String observation;
@@ -15,35 +21,4 @@ public class OrderItemInput {
 	@NotNull
 	private ProductIdInput product;
 
-	public BigDecimal getUnitPrice() {
-		return unitPrice;
-	}
-
-	public void setUnitPrice(BigDecimal unitPrice) {
-		this.unitPrice = unitPrice;
-	}
-
-	public Integer getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
-
-	public String getObservation() {
-		return observation;
-	}
-
-	public void setObservation(String observation) {
-		this.observation = observation;
-	}
-
-	public ProductIdInput getProduct() {
-		return product;
-	}
-
-	public void setProduct(ProductIdInput product) {
-		this.product = product;
-	}
 }

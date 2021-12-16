@@ -9,6 +9,11 @@ import org.hibernate.validator.constraints.br.CNPJ;
 
 import com.frwk.drugstore.domain.model.Address;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class DrugstoreInput {
 
 	@NotBlank
@@ -25,44 +30,4 @@ public class DrugstoreInput {
 	
 	private Address address;
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCnpj() {
-		return cnpj;
-	}
-
-	public void setCnpj(String cnpj) {
-		this.cnpj = cnpj;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public List<String> getPhones() {
-		return phones;
-	}
-
-	public void setPhones(List<String> phones) {
-		this.phones = phones;
-	}
-
-	public Address getAddress() {
-		return address;
-	}
-
-	public void setAddress(Address address) {
-		this.address = address;
-	}
-	
 }
