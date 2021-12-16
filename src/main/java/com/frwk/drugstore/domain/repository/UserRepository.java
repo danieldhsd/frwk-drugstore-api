@@ -1,6 +1,5 @@
 package com.frwk.drugstore.domain.repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +11,7 @@ import com.frwk.drugstore.domain.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	User findFirstByCpf(String cpf);
+	Optional<User> findFirstByCpf(String cpf);
 	
 	boolean existsByEmailOrCpf(String email, String cpf);
 	
