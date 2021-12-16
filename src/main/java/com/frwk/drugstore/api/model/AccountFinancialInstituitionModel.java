@@ -1,31 +1,25 @@
 package com.frwk.drugstore.api.model;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-
-import com.frwk.drugstore.domain.model.Address;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class DrugstoreModel {
+public class AccountFinancialInstituitionModel {
 
 	private Long id;
 	
-	private String name;
+	private String account;
 	
-	private String cnpj;
-
-	private String email;
+	private String agency;
 	
-	private List<String> phones;
+	private UserModel client;
 	
-	private Address address;
+	private FinancialInstituitionModel financialInstituition;
 	
 	private OffsetDateTime createdAt;
 	
 	private OffsetDateTime updatedAt;
-
 }

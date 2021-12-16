@@ -8,6 +8,11 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import com.frwk.drugstore.domain.model.enumeration.PaymentMethod;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class OrderInput {
 
 	private DrugstoreIdInput drugstore;
@@ -22,43 +27,4 @@ public class OrderInput {
 	
 	private PaymentMethod paymentMethod;
 
-	public DrugstoreIdInput getDrugstore() {
-		return drugstore;
-	}
-
-	public void setDrugstore(DrugstoreIdInput drugstore) {
-		this.drugstore = drugstore;
-	}
-
-	public List<OrderItemInput> getOrderItems() {
-		return orderItems;
-	}
-
-	public void setOrderItems(List<OrderItemInput> orderItems) {
-		this.orderItems = orderItems;
-	}
-
-	public UserIdInput getClient() {
-		return client;
-	}
-
-	public void setClient(UserIdInput client) {
-		this.client = client;
-	}
-
-	public String getCpfClient() {
-		return cpfClient;
-	}
-
-	public void setCpfClient(String cpfClient) {
-		this.cpfClient = cpfClient;
-	}
-
-	public PaymentMethod getPaymentMethod() {
-		return paymentMethod;
-	}
-
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
 }

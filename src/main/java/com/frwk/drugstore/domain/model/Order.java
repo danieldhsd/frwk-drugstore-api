@@ -3,7 +3,6 @@ package com.frwk.drugstore.domain.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -27,10 +26,18 @@ import org.hibernate.validator.constraints.br.CPF;
 
 import com.frwk.drugstore.domain.model.enumeration.PaymentMethod;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "tb_order")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 public class Order {
 
+	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -70,93 +77,4 @@ public class Order {
 		updatedAt = OffsetDateTime.now();
 	}
 	
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Order other = (Order) obj;
-		return Objects.equals(id, other.id);
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Drugstore getDrugstore() {
-		return drugstore;
-	}
-
-	public void setDrugstore(Drugstore drugstore) {
-		this.drugstore = drugstore;
-	}
-
-	public List<OrderItem> getOrderItems() {
-		return orderItems;
-	}
-
-	public void setOrderItems(List<OrderItem> orderItems) {
-		this.orderItems = orderItems;
-	}
-
-	public OffsetDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(OffsetDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
-	public OffsetDateTime getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(OffsetDateTime updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public BigDecimal getTotalValue() {
-		return totalValue;
-	}
-
-	public void setTotalValue(BigDecimal totalValue) {
-		this.totalValue = totalValue;
-	}
-
-	public User getClient() {
-		return client;
-	}
-
-	public void setClient(User client) {
-		this.client = client;
-	}
-
-	public PaymentMethod getPaymentMethod() {
-		return paymentMethod;
-	}
-
-	public void setPaymentMethod(PaymentMethod paymentMethod) {
-		this.paymentMethod = paymentMethod;
-	}
-
-	public String getCpfClient() {
-		return cpfClient;
-	}
-
-	public void setCpfClient(String cpfClient) {
-		this.cpfClient = cpfClient;
-	}
-
 }
